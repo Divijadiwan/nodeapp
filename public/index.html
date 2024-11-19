@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TV Show Suggestions</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 30px;
+      text-align: center;
+    }
+    button {
+      margin: 5px;
+      padding: 10px 20px;
+	  border-radius: 10px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+	#show-list {
+      margin-top: 20px;
+    }
+    /* Remove bullet points from list */
+    ul {
+      list-style-type: none;
+      padding: 0;
+    }
+  </style>
+</head>
+<body>
+  <h1>Get a TV Show Suggestion</h1>
+  <h3>Select a genre</h3>
+  <div>
+    <button onclick="getShows('drama')">Drama</button>
+    <button onclick="getShows('comedy')">Comedy</button>
+    <button onclick="getShows('scifi')">Sci-Fi</button>
+    <button onclick="getShows('fantasy')">Fantasy</button>
+  </div>
+  
+  <div id="show-list">
+    <!-- TV show suggestions will be displayed here -->
+  </div>
+
+  <script>
+    function getShows(genre) {
+      // Fetch TV shows from the API based on genre
+      fetch(`/api/tvshows/${genre}`)
+        .then(response => response.json())
+        .then(data => displayShows(data, genre))
+        .catch(error => {
+          console.error('Error fetching data:', error);
+          document.getElementById('show-list').innerHTML = 'Error fetching data.';
+        });
+    }
+
+	function displayShows(shows, genre) {
+      const showListDiv = document.getElementById('show-list');
+      if (shows.length > 0) {
+        showListDiv.innerHTML = `<h2>${genre.charAt(0).toUpperCase() + genre.slice(1)} TV Shows:</h2><ul>` +
+          shows.map(show => `<li>${show.title}</li>`).join('') +
+          '</ul>';
+      } else {
+        showListDiv.innerHTML = `No shows found for genre: ${genre}`;
+      }
+    }
+  </script>
+</body>
+</html>
